@@ -20,3 +20,4 @@ Route::get('/', function () {
 
 Route::get('/guestbook', [GuestBookController::class, 'index'])->name('guestbook.index');
 Route::get('/guestbook/create', [GuestBookController::class, 'create'])->name('guestbook.create');
+Route::post('/guestbook', [GuestBookController::class, 'store'])->name('guestbook.store');
