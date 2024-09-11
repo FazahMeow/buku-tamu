@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GuestBookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,4 +18,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/guestbook', [GuestBookController::class, ''])->name('guestbook.index');
+Route::get('/guestbook', [GuestBookController::class, 'index'])->name('guestbook.index');
+Route::get('/guestbook/create', [GuestBookController::class, 'create'])->name('guestbook.create');
