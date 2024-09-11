@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GuestBookController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\VisitorController;
 
 // Route untuk login
 Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -33,8 +34,14 @@ Route::get('/dashboard', function () {
     return 'Selamat datang di Dashboard!';
 })->middleware('auth');
 
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware('auth');
+
 // Route untuk halaman GuestBook
 Route::get('/guestbook', [GuestBookController::class, 'index'])->name('guestbook.index');
 Route::get('/guestbook/create', [GuestBookController::class, 'create'])->name('guestbook.create');
+Route::get('/dashboard', [VisitorController::class, 'index'])->name('dashboard');
+Route::post('/visitor', [VisitorController::class, 'store'])->name('visitor.store');
 Route::post('/guestbook', [GuestBookController::class, 'store'])->name('guestbook.store');
 
