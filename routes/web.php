@@ -5,43 +5,26 @@ use App\Http\Controllers\GuestBookController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VisitorController;
 
-// Route untuk login
-Route::post('/login', [AuthController::class, 'login'])->name('login');
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
-// Route untuk halaman utama
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome'); 
 });
 
-// Route untuk halaman login
 Route::get('/login', function () {
-    return view('login');
-});
+    return view('auth.login');
+})->name('login');//->middleware('dashboard');
 
-// Route untuk halaman dashboard, dilindungi oleh middleware auth
-Route::get('/dashboard', function () {
-    return 'Selamat datang di Dashboard!';
-})->middleware('auth');
+Route::post('/login', [AuthController::class, 'login']);
+    //->middleware('dashboard');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth');
+Route::get('/dashboard', [VisitorController::class, 'index'])
+     ->name('dashboard')
+     ->middleware('auth');
 
-// Route untuk halaman GuestBook
-Route::get('/guestbook', [GuestBookController::class, 'index'])->name('guestbook.index');
-Route::get('/guestbook/create', [GuestBookController::class, 'create'])->name('guestbook.create');
-Route::get('/dashboard', [VisitorController::class, 'index'])->name('dashboard');
-Route::post('/visitor', [VisitorController::class, 'store'])->name('visitor.store');
-Route::post('/guestbook', [GuestBookController::class, 'store'])->name('guestbook.store');
-
+Route::post('/visitor', [VisitorController::class, 'store'])
+     ->name('visitor.store');
