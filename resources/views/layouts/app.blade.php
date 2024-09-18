@@ -24,7 +24,9 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: var(--secondary-color);
+            background-image: url('{{ asset('images/background_list.svg') }}');
+            background-size: cover;
+            background-position: center;
             color: var(--text-color);
         }
 
@@ -70,8 +72,11 @@
         }
 
         #main {
-            margin-top: 80px;
-            padding: 2rem;
+            margin-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 1200px;
+            border-radius: 100px;
         }
 
         .container {
@@ -116,10 +121,26 @@
             margin-bottom: 1rem;
         }
 
-        .search-bar, .filter-button {
-            padding: 0.5rem 1rem;
+        .search-wrapper {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
             border: 1px solid var(--border-color);
             border-radius: 5px;
+            font-size: 1rem;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23aaa" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: 0.75rem center;
+            background-size: 1rem;
+        }
+
+        .search-bar::placeholder {
+            font-style: italic;
+            color: #aaa;
         }
 
         .filter-button {
@@ -127,10 +148,18 @@
             color: #fff;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            flex-shrink: 0;
         }
 
-        .filter-button:hover {
-            background-color: var(--hover-color);
+        .filter-button i {
+            font-size: 1.2rem;
         }
 
         .filter-popup {
@@ -164,6 +193,15 @@
             background-color: rgba(0,0,0,0.5);
             z-index: 1000;
         }
+
+        #page-content {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        #page-content.fade-out {
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
@@ -171,7 +209,7 @@
     <nav class="navbar">
         <div class="navbar-brand">Dashboard Admin Tamu</div>
         <div class="navbar-menu">
-            <a href="{{ route('dashboard') }}" class="navbar-item {{ Request::is('dashboard') ? 'active' : '' }}">
+            <a href="{{ route('dashboard') }}" class="navbar-item {{ Request::is('dashboard') ? 'active' : '' }}" data-target="dashboard">
                 <i class="fas fa-tachometer-alt"></i>
                 Beranda
             </a>
@@ -179,7 +217,7 @@
                 <i class="fas fa-users"></i>
                 Pengunjung
             </a>
-            <a href="{{ route('report') }}" class="navbar-item {{ Request::is('dashboard/report') ? 'active' : '' }}">
+            <a href="{{ route('report') }}" class="navbar-item {{ Request::is('dashboard/report') ? 'active' : '' }}" data-target="report">
                 <i class="fas fa-chart-bar"></i>
                 Laporan
             </a>
@@ -191,5 +229,42 @@
     </div>
 
     @yield('scripts')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const navLinks = document.querySelectorAll('.navbar-item[data-target]');
+            const pageContent = document.getElementById('page-content');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (!this.classList.contains('active')) {
+                        const target = this.getAttribute('data-target');
+
+                        pageContent.classList.add('fade-out');
+
+                        setTimeout(() => {
+                            fetch(`/${target}`)
+                                .then(response => response.text())
+                                .then(html => {
+                                    const parser = new DOMParser();
+                                    const doc = parser.parseFromString(html, 'text/html');
+                                    const newContent = doc.querySelector('#page-content').innerHTML;
+                                    pageContent.innerHTML = newContent;
+                                    pageContent.classList.remove('fade-out');
+                                    
+                                    // Update URL tanpa me-refresh halaman
+                                    history.pushState(null, '', `/${target}`);
+                                    
+                                    // Update status aktif pada navbar
+                                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+                                    this.classList.add('active');
+                                });
+                        }, 300);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
