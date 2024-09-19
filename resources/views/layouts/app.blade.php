@@ -267,6 +267,80 @@
         #main-container.hidden {
             opacity: 0;
         }
+
+        .dashboard-container {
+            padding: 20px;
+        }
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .stat-box, .time-box, .calendar-box {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 23%;
+        }
+        .stat-box {
+            display: flex;
+            align-items: center;
+        }
+        .total-visitors {
+            background-color: #00ffff;
+        }
+        .today-visitors {
+            background-color: #ff0000;
+            color: #fff;
+        }
+        .stat-box i {
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+        .stat-content h3 {
+            margin: 0;
+            font-size: 1rem;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 5px 0 0;
+        }
+        .time-box #current-time {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .chart-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .monthly-visitors-chart, .recent-visitors {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .monthly-visitors-chart {
+            width: 65%;
+        }
+        .recent-visitors {
+            width: 33%;
+        }
+        .chart-placeholder {
+            height: 200px;
+            background-color: #f0f0f0;
+            margin-bottom: 10px;
+        }
+        .chart-labels {
+            display: flex;
+            justify-content: space-between;
+        }
+        .chart-labels span {
+            font-size: 0.8rem;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -345,7 +419,7 @@
                                     this.classList.add('active');
 
                                     hideLoader(); // Sembunyikan loader setelah konten dimuat
-                                }, 3000); // Sesuaikan waktu ini dengan durasi animasi loader Anda
+                                }, 800); // Sesuaikan waktu ini dengan durasi animasi loader Anda
                             })
                             .catch(error => {
                                 console.error('Error:', error);
@@ -355,6 +429,15 @@
                 });
             });
         });
+
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('current-time').textContent = timeString;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
     </script>
 </body>
 </html>
