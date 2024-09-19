@@ -14,7 +14,7 @@
         <div class="row h-100">
             <div class="col-12 d-flex align-items-center justify-content-center">
                 <div class="login-card">
-                    <img src="{{ asset('images/bpsdin-logo.png') }}" alt="BPSDIN Logo" class="logo mb-4">
+                    <img src="{{ asset('images/logo_bpsdm.png') }}" alt="BPSDIN Logo" class="logo mb-4">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="mb-3">

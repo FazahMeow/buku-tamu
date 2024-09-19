@@ -25,8 +25,8 @@
         body {
             font-family: 'Poppins', sans-serif;
             background-image: url('{{ asset('images/background_list.svg') }}');
-            background-size: cover;
-            background-position: center;
+            background-size: 100%;
+            background-position: fixed;
             color: var(--text-color);
         }
 
@@ -72,6 +72,7 @@
         }
 
         #main {
+            position: relative;
             margin-top: 100px;
             margin-left: auto;
             margin-right: auto;
@@ -197,9 +198,73 @@
         #page-content {
             opacity: 1;
             transition: opacity 0.3s ease;
+            position: relative;
         }
 
         #page-content.fade-out {
+            opacity: 0;
+        }
+
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .page-loader.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loader {
+            width: 28px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: #E3AAD6;
+            transform-origin: top;
+            display: grid;
+            animation: l3-0 1s infinite linear;
+        }
+        .loader::before,
+        .loader::after {
+        content: "";
+        grid-area: 1/1;
+        background:#F4DD51;
+        border-radius: 50%;
+        transform-origin: top;
+        animation: inherit;
+        animation-name: l3-1;
+        }
+        .loader::after {
+        background: #F10C49;
+        --s:180deg;
+        }
+
+        @keyframes l3-0 {
+            0%,20% {transform: rotate(0)}
+            100%   {transform: rotate(360deg)}
+        }
+        @keyframes l3-1 {
+            50% {transform: rotate(var(--s,90deg))}
+            100% {transform: rotate(0)}
+        }
+
+        #main-container {
+            transition: opacity 0.3s ease;
+            opacity: 1;
+        }
+
+        #main-container.hidden {
             opacity: 0;
         }
     </style>
@@ -225,7 +290,14 @@
     </nav>
 
     <div id="main">
-        @yield('content')
+        <div id="page-loader" class="page-loader">
+            <div class="loader"></div>
+        </div>
+        <div id="main-container">
+            <div id="page-content">
+                @yield('content')
+            </div>
+        </div>
     </div>
 
     @yield('scripts')
@@ -234,6 +306,18 @@
         document.addEventListener('DOMContentLoaded', (event) => {
             const navLinks = document.querySelectorAll('.navbar-item[data-target]');
             const pageContent = document.getElementById('page-content');
+            const pageLoader = document.getElementById('page-loader');
+            const mainContainer = document.getElementById('main-container');
+
+            function showLoader() {
+                pageLoader.classList.add('show');
+                mainContainer.classList.add('hidden');
+            }
+
+            function hideLoader() {
+                pageLoader.classList.remove('show');
+                mainContainer.classList.remove('hidden');
+            }
 
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -241,17 +325,17 @@
                     if (!this.classList.contains('active')) {
                         const target = this.getAttribute('data-target');
 
-                        pageContent.classList.add('fade-out');
+                        showLoader(); // Tampilkan loader dan sembunyikan konten
 
-                        setTimeout(() => {
-                            fetch(`/${target}`)
-                                .then(response => response.text())
-                                .then(html => {
-                                    const parser = new DOMParser();
-                                    const doc = parser.parseFromString(html, 'text/html');
-                                    const newContent = doc.querySelector('#page-content').innerHTML;
+                        fetch(`/${target}`)
+                            .then(response => response.text())
+                            .then(html => {
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(html, 'text/html');
+                                const newContent = doc.querySelector('#page-content').innerHTML;
+
+                                setTimeout(() => {
                                     pageContent.innerHTML = newContent;
-                                    pageContent.classList.remove('fade-out');
                                     
                                     // Update URL tanpa me-refresh halaman
                                     history.pushState(null, '', `/${target}`);
@@ -259,8 +343,14 @@
                                     // Update status aktif pada navbar
                                     navLinks.forEach(navLink => navLink.classList.remove('active'));
                                     this.classList.add('active');
-                                });
-                        }, 300);
+
+                                    hideLoader(); // Sembunyikan loader setelah konten dimuat
+                                }, 3000); // Sesuaikan waktu ini dengan durasi animasi loader Anda
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                hideLoader(); // Sembunyikan loader jika terjadi error
+                            });
                     }
                 });
             });
