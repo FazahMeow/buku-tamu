@@ -96,6 +96,7 @@
             overflow-x: auto;
         }
 
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -307,6 +308,14 @@
             font-weight: bold;
             margin: 5px 0 0;
         }
+
+        .time-box {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         .time-box #current-time {
             font-size: 2.5rem;
             font-weight: bold;

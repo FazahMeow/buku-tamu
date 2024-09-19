@@ -10,6 +10,10 @@
     <link href="{{ asset('css/login.css') }}" rel="stylesheet">
 </head>
 <body>
+    <video autoplay muted loop class="background-video">
+        <source src="{{ asset('video/background.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
     <div class="container-fluid h-100">
         <div class="row h-100">
             <div class="col-12 d-flex align-items-center justify-content-center">

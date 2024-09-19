@@ -48,11 +48,6 @@
                 <span>DES</span>
             </div>
         </div>
-        <div class="recent-visitors">
-            <h3>Pengunjung baru-baru ini</h3>
-            <!-- Tambahkan daftar pengunjung terbaru di sini -->
-             
-        </div>
     </div>
 </div>
 @endsection
