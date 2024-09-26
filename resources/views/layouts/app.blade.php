@@ -6,6 +6,7 @@
     <title>@yield('title', 'Dashboard Admin Tamu')</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #4a90e2;
@@ -24,10 +25,13 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-image: url('{{ asset('images/background_list.svg') }}');
-            background-size: 100%;
-            background-position: fixed;
+            background-image: url('{{ asset('images/background_list.png') }}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: var(--text-color);
+            margin: 0;
+            padding: 0;
         }
 
         .navbar {
@@ -63,8 +67,7 @@
         }
 
         .navbar-item:hover, .navbar-item.active {
-            background-color: var(--primary-color);
-            color: #fff;
+            font-weight: bold;
         }
 
         .navbar-item i {
@@ -74,17 +77,18 @@
         #main {
             position: relative;
             margin-top: 100px;
-            margin-left: auto;
+            margin-left: 250px;
             margin-right: auto;
             max-width: 1200px;
-            border-radius: 100px;
+            border-radius: 10px;
         }
 
         .container {
             background-color: #fff;
-            border-radius: 8px;
+            border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             padding: 2rem;
+            font-family: 'Roboto', sans-serif;
         }
 
         h1, h2 {
@@ -95,8 +99,7 @@
         .table-container {
             overflow-x: auto;
         }
-
-
+    
         table {
             width: 100%;
             border-collapse: collapse;
@@ -146,8 +149,8 @@
         }
 
         .filter-button {
-            background-color: var(--primary-color);
-            color: #fff;
+            background-color: #fff;
+            color: var(--primary-color);
             cursor: pointer;
             transition: background-color 0.3s ease;
             display: flex;
@@ -269,22 +272,33 @@
             opacity: 0;
         }
 
-        .dashboard-container {
+        /* Halaman Report */
+        .report-container {
             padding: 20px;
         }
         .stats-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
-        .stat-box, .time-box, .calendar-box {
+        .stat-box {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            width: 48%;
+        }
+
+        .calendar-box {
+            background-color: #fff;
+            width: 30%;
+        }
+        .stat-box {
             background-color: #fff;
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            width: 23%;
-        }
-        .stat-box {
+            width: 48%;
             display: flex;
             align-items: center;
         }
@@ -296,12 +310,20 @@
             color: #fff;
         }
         .stat-box i {
-            font-size: 2.5rem;
-            margin-right: 15px;
+            font-size: 1.2rem;
+            margin-right: 10px;
         }
         .stat-content h3 {
             margin: 0;
-            font-size: 1rem;
+            font-size: 12px;
+        }
+        .stat-content h4 {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        .stat-content p {
+            margin: 0;
+            font-size: 12px;
         }
         .stat-number {
             font-size: 2rem;
@@ -309,34 +331,136 @@
             margin: 5px 0 0;
         }
 
-        .time-box {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .clock {
+            &-day {
+                &:before {
+                    content: var(--timer-day);
+                }
+            }
+            &-hours {
+                &:before {
+                    content: var(--timer-hours);
+                }
+            }
+            &-minutes {
+                &:before {
+                content: var(--timer-minutes);
+                }
+            }
+            &-seconds {
+                &:before {
+                content: var(--timer-seconds);
+                }
+            }
         }
 
-        .time-box #current-time {
+        .clock {
+            &-container {
+                margin-top: 30px;
+                margin-bottom: 30px;
+                background-color: #080808;
+                border-radius: 5px;
+                padding: 60px 20px;
+                box-shadow: 1px 1px 5px rgba(255,255,255,.15), 0 15px 90px 30px rgba(0,0,0,.25);
+                display: flex;
+            }
+            &-col {
+                text-align: center;
+                margin-right: 40px;
+                margin-left: 40px;
+                min-width: 90px;
+                position: relative;
+                &:not(:last-child):before,
+                &:not(:last-child):after{
+                content: "";
+                background-color: rgba(255,255,255,.3);
+                height: 5px;
+                width: 5px;
+                border-radius: 50%;
+                display: block;
+                position: absolute;
+                right: -42px;
+                }
+                &:not(:last-child):before {
+                top: 35%;
+                }
+                &:not(:last-child):after {
+                top: 50%;
+                }
+            }
+            &-timer {
+                &:before {
+                color: #fff;
+                font-size: 4.2rem;
+                text-transform: uppercase;
+                }
+            }
+            &-label {
+                color: rgba(255,255,255,.35);
+                text-transform: uppercase;
+                font-size: .7rem;
+                margin-top: 10px;
+            }
+        }
+
+        .clock-day:before {
+            content: var(--timer-day);
+        }
+        .clock-hours:before {
+            content: var(--timer-hours);
+        }
+        .clock-minutes:before {
+            content: var(--timer-minutes);
+        }
+        .clock-seconds:before {
+            content: var(--timer-seconds);
+        }
+
+        @media (max-width: 825px) {
+            .clock-container {
+            flex-direction: column;
+                padding-top: 40px;
+                padding-bottom: 40px;
+            }
+            .clock-col {
+                & + & {
+                margin-top: 20px;
+                }
+                &:before,
+                &:after {
+                display: none!important;
+                }
+            }
+        }
+
+        #current-time {
             font-size: 2.5rem;
-            font-weight: bold;
-            margin: 10px 0;
+            margin: 10px 0 0;
         }
-        .chart-row {
-            display: flex;
+        .chart-stats-row {
+         display: flex;
             justify-content: space-between;
+            margin-bottom: 20px;
         }
-        .monthly-visitors-chart, .recent-visitors {
+        .chart-calendar-container {
+            width: 65%;
+        }
+        .monthly-visitors-chart, .calendar-box {
             background-color: #fff;
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }   
+        .monthly-visitors-chart h3, .table-header-report h3{
+            color: var(--primary-color);
         }
-        .monthly-visitors-chart {
+        /* .monthly-visitors-chart {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             width: 65%;
-        }
-        .recent-visitors {
-            width: 33%;
-        }
+        } */
         .chart-placeholder {
             height: 200px;
             background-color: #f0f0f0;
@@ -345,32 +469,97 @@
         .chart-labels {
             display: flex;
             justify-content: space-between;
+            font-size: 0.8rem;
         }
         .chart-labels span {
             font-size: 0.8rem;
             color: #666;
         }
+        .visitor-table {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Gaya untuk header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 10px 40px;
+            z-index: 1;
+        }
+
+        .header img {
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        /* Gaya untuk side navbar */
+        .sidenav {
+            height: calc(100% - 60px);
+            width: 190px;
+            position: fixed;
+            z-index: 2;
+            top: 100px;
+            left: 0;
+            overflow-x: hidden;
+            transition: 0.5s;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .sidenav a {
+            padding: 15px 8px 15px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #181C14; /* Mengubah warna teks menjadi lebih terang */
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidenav a:hover {
+            background-color: rgb(233, 239, 236);
+        }
+
+        .sidenav a.active {
+            font-weight: bold; /* Membuat item aktif menjadi bold */
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {padding-top: 15px;}
+            .sidenav a {font-size: 18px;}
+        }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="navbar-brand">Dashboard Admin Tamu</div>
-        <div class="navbar-menu">
-            <a href="{{ route('dashboard') }}" class="navbar-item {{ Request::is('dashboard') ? 'active' : '' }}" data-target="dashboard">
-                <i class="fas fa-tachometer-alt"></i>
-                Beranda
-            </a>
-            <a href="#" class="navbar-item">
-                <i class="fas fa-users"></i>
-                Pengunjung
-            </a>
-            <a href="{{ route('report') }}" class="navbar-item {{ Request::is('dashboard/report') ? 'active' : '' }}" data-target="report">
-                <i class="fas fa-chart-bar"></i>
-                Laporan
-            </a>
-        </div>
-    </nav>
+    <div class="header">
+        <img src="{{ asset('images/logo_bpsdm.png') }}" alt="Logo">
+    </div>
+
+    <div id="mySidenav" class="sidenav">
+        <a href="{{ route('dashboard') }}" class="navbar-item {{ Request::is('dashboard') ? 'active' : '' }}" data-target="dashboard">
+            <i class="fas fa-home-alt"></i> Beranda
+        </a>
+        <a href="#" class="navbar-item">
+            <i class="fas fa-users"></i> Pengunjung
+        </a>
+        <a href="{{ route('report') }}" class="navbar-item {{ Request::is('dashboard/report') ? 'active' : '' }}" data-target="report">
+            <i class="fas fa-chart-bar"></i> Laporan
+        </a>
+    </div>
 
     <div id="main">
         <div id="page-loader" class="page-loader">
@@ -402,51 +591,74 @@
                 mainContainer.classList.remove('hidden');
             }
 
+            function loadContent(url) {
+                showLoader();
+                fetch(url)
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const newContent = doc.querySelector('#page-content').innerHTML;
+
+                        setTimeout(() => {
+                            pageContent.innerHTML = newContent;
+                            hideLoader();
+                            updateActiveNavItem(url);
+                        }, 500);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        hideLoader();
+                    });
+            }
+
+            function updateActiveNavItem(path) {
+                navLinks.forEach(link => {
+                    const linkPath = '/' + link.getAttribute('data-target');
+                    if (linkPath === path) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            }
+
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
                     if (!this.classList.contains('active')) {
                         const target = this.getAttribute('data-target');
-
-                        showLoader(); // Tampilkan loader dan sembunyikan konten
-
-                        fetch(`/${target}`)
-                            .then(response => response.text())
-                            .then(html => {
-                                const parser = new DOMParser();
-                                const doc = parser.parseFromString(html, 'text/html');
-                                const newContent = doc.querySelector('#page-content').innerHTML;
-
-                                setTimeout(() => {
-                                    pageContent.innerHTML = newContent;
-                                    
-                                    // Update URL tanpa me-refresh halaman
-                                    history.pushState(null, '', `/${target}`);
-                                    
-                                    // Update status aktif pada navbar
-                                    navLinks.forEach(navLink => navLink.classList.remove('active'));
-                                    this.classList.add('active');
-
-                                    hideLoader(); // Sembunyikan loader setelah konten dimuat
-                                }, 800); // Sesuaikan waktu ini dengan durasi animasi loader Anda
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                hideLoader(); // Sembunyikan loader jika terjadi error
-                            });
+                        const url = `/${target}`;
+                        loadContent(url);
+                        history.pushState(null, '', url);
                     }
                 });
             });
+
+            // Handle browser back/forward buttons
+            window.addEventListener('popstate', function(e) {
+                loadContent(window.location.pathname);
+            });
+
+            // Load initial content if not on the dashboard
+            if (window.location.pathname !== '/dashboard') {
+                loadContent(window.location.pathname);
+            }
+
+            // Clock functionality
+            function updateClock() {
+                const now = new Date();
+                
+                document.documentElement.style.setProperty('--timer-day', "'" + now.toLocaleString('id-ID', { weekday: 'short' }) + "'");
+                document.documentElement.style.setProperty('--timer-hours', "'" + now.getHours().toString().padStart(2, '0') + "'");
+                document.documentElement.style.setProperty('--timer-minutes', "'" + now.getMinutes().toString().padStart(2, '0') + "'");
+                document.documentElement.style.setProperty('--timer-seconds', "'" + now.getSeconds().toString().padStart(2, '0') + "'");
+            }
+
+            // Update clock immediately and then every second
+            updateClock();
+            setInterval(updateClock, 1000);
         });
-
-        function updateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-            document.getElementById('current-time').textContent = timeString;
-        }
-
-        setInterval(updateTime, 1000);
-        updateTime();
     </script>
 </body>
 </html>

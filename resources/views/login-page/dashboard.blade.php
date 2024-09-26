@@ -3,169 +3,171 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="container">
-    <!-- Visitor Table Section -->
-    <div class="table-container">
-        <div class="table-header">
-            <h2>Daftar Pengunjung</h2>
-            <div class="search-filter-container">
-                <div class="search-wrapper">
-                    <input type="text" id="searchBar" class="search-bar" placeholder="Cari pengunjung..." onkeyup="searchTable()">
+<div id="page-content">
+    <div class="container">
+        <!-- Visitor Table Section -->
+        <div class="table-container">
+            <div class="table-header">
+                <h2>Daftar Pengunjung</h2>
+                <div class="search-filter-container">
+                    <div class="search-wrapper">
+                        <input type="text" id="searchBar" class="search-bar" placeholder="Cari pengunjung..." onkeyup="searchTable()">
+                    </div>
+                    <button class="filter-button" onclick="openFilterPopup()" title="Filter">
+                        <i class="fas fa-filter"></i>
+                    </button>
                 </div>
-                <button class="filter-button" onclick="openFilterPopup()" title="Filter">
-                    <i class="fas fa-filter"></i>
-                </button>
             </div>
+            <table id="visitorTable">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">No</th>
+                        <th onclick="sortTable(1)">Nama</th>
+                        <th onclick="sortTable(2)">Nomor HP</th>
+                        <th onclick="sortTable(3)">Email</th>
+                        <th onclick="sortTable(4)">Instansi</th>
+                        <th onclick="sortTable(5)">Tujuan</th>
+                        <th onclick="sortTable(6)">Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody id="visitorTableBody">
+                    <tr>
+                        <td>1</td>
+                        <td>John Doe</td>
+                        <td>1234567890</td>
+                        <td>johndoe@example.com</td>
+                        <td>XYZ Corp</td>
+                        <td>Meeting</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Alohn Doe</td>
+                        <td>5534567890</td>
+                        <td>lohndoe@example.com</td>
+                        <td>ABC Corp</td>
+                        <td>Ngyseeing</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Bindol nidd</td>
+                        <td>55344434890</td>
+                        <td>mikolk@example.com</td>
+                        <td>Falling</td>
+                        <td>B-React</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Bindol nidd</td>
+                        <td>55344434890</td>
+                        <td>mikolk@example.com</td>
+                        <td>Falling</td>
+                        <td>B-React</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Bindol nidd</td>
+                        <td>55344434890</td>
+                        <td>mikolk@example.com</td>
+                        <td>Falling</td>
+                        <td>B-React</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Bindol nidd</td>
+                        <td>55344434890</td>
+                        <td>mikolk@example.com</td>
+                        <td>Falling</td>
+                        <td>B-React</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Bindol nidd</td>
+                        <td>55344434890</td>
+                        <td>mikolk@example.com</td>
+                        <td>Falling</td>
+                        <td>B-React</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Bindol nidd</td>
+                        <td>55344434890</td>
+                        <td>mikolk@example.com</td>
+                        <td>Falling</td>
+                        <td>B-React</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Bindol nidd</td>
+                        <td>55344434890</td>
+                        <td>mikolk@example.com</td>
+                        <td>Falling</td>
+                        <td>B-React</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Bindol nidd</td>
+                        <td>55344434890</td>
+                        <td>mikolk@example.com</td>
+                        <td>Falling</td>
+                        <td>B-React</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Bindol nidd</td>
+                        <td>55344434890</td>
+                        <td>mikolk@example.com</td>
+                        <td>Falling</td>
+                        <td>B-React</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Bindol nidd</td>
+                        <td>55344434890</td>
+                        <td>mikolk@example.com</td>
+                        <td>Falling</td>
+                        <td>B-React</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Bindol nidd</td>
+                        <td>55344434890</td>
+                        <td>mikolk@example.com</td>
+                        <td>Falling</td>
+                        <td>B-React</td>
+                        <td>None</td>
+                    </tr>
+                    <!-- Tambahkan data pengunjung lainnya -->
+                </tbody>
+            </table>
         </div>
-        <table id="visitorTable">
-            <thead>
-                <tr>
-                    <th onclick="sortTable(0)">No</th>
-                    <th onclick="sortTable(1)">Nama</th>
-                    <th onclick="sortTable(2)">Nomor HP</th>
-                    <th onclick="sortTable(3)">Email</th>
-                    <th onclick="sortTable(4)">Instansi</th>
-                    <th onclick="sortTable(5)">Tujuan</th>
-                    <th onclick="sortTable(6)">Keterangan</th>
-                </tr>
-            </thead>
-            <tbody id="visitorTableBody">
-                <tr>
-                    <td>1</td>
-                    <td>John Doe</td>
-                    <td>1234567890</td>
-                    <td>johndoe@example.com</td>
-                    <td>XYZ Corp</td>
-                    <td>Meeting</td>
-                    <td>None</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Alohn Doe</td>
-                    <td>5534567890</td>
-                    <td>lohndoe@example.com</td>
-                    <td>ABC Corp</td>
-                    <td>Ngyseeing</td>
-                    <td>None</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Bindol nidd</td>
-                    <td>55344434890</td>
-                    <td>mikolk@example.com</td>
-                    <td>Falling</td>
-                    <td>B-React</td>
-                    <td>None</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Bindol nidd</td>
-                    <td>55344434890</td>
-                    <td>mikolk@example.com</td>
-                    <td>Falling</td>
-                    <td>B-React</td>
-                    <td>None</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Bindol nidd</td>
-                    <td>55344434890</td>
-                    <td>mikolk@example.com</td>
-                    <td>Falling</td>
-                    <td>B-React</td>
-                    <td>None</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Bindol nidd</td>
-                    <td>55344434890</td>
-                    <td>mikolk@example.com</td>
-                    <td>Falling</td>
-                    <td>B-React</td>
-                    <td>None</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Bindol nidd</td>
-                    <td>55344434890</td>
-                    <td>mikolk@example.com</td>
-                    <td>Falling</td>
-                    <td>B-React</td>
-                    <td>None</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Bindol nidd</td>
-                    <td>55344434890</td>
-                    <td>mikolk@example.com</td>
-                    <td>Falling</td>
-                    <td>B-React</td>
-                    <td>None</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Bindol nidd</td>
-                    <td>55344434890</td>
-                    <td>mikolk@example.com</td>
-                    <td>Falling</td>
-                    <td>B-React</td>
-                    <td>None</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Bindol nidd</td>
-                    <td>55344434890</td>
-                    <td>mikolk@example.com</td>
-                    <td>Falling</td>
-                    <td>B-React</td>
-                    <td>None</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Bindol nidd</td>
-                    <td>55344434890</td>
-                    <td>mikolk@example.com</td>
-                    <td>Falling</td>
-                    <td>B-React</td>
-                    <td>None</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Bindol nidd</td>
-                    <td>55344434890</td>
-                    <td>mikolk@example.com</td>
-                    <td>Falling</td>
-                    <td>B-React</td>
-                    <td>None</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Bindol nidd</td>
-                    <td>55344434890</td>
-                    <td>mikolk@example.com</td>
-                    <td>Falling</td>
-                    <td>B-React</td>
-                    <td>None</td>
-                </tr>
-                <!-- Tambahkan data pengunjung lainnya -->
-            </tbody>
-        </table>
     </div>
-</div>
 
-<div id="filterPopup" class="filter-popup">
-    <span class="close-popup" onclick="closeFilterPopup()">&times;</span>
-    <h2>Filter Pengunjung</h2>
-    <form id="filterForm">
-        <input type="text" id="nameFilter" placeholder="Nama">
-        <input type="text" id="instansiFilter" placeholder="Instansi">
-        <input type="date" id="dateFilter">
-        <button type="button" onclick="applyFilter()">Terapkan Filter</button>
-    </form>
-</div>
+    <div id="filterPopup" class="filter-popup">
+        <span class="close-popup" onclick="closeFilterPopup()">&times;</span>
+        <h2>Filter Pengunjung</h2>
+        <form id="filterForm">
+            <input type="text" id="nameFilter" placeholder="Nama">
+            <input type="text" id="instansiFilter" placeholder="Instansi">
+            <input type="date" id="dateFilter">
+            <button type="button" onclick="applyFilter()">Terapkan Filter</button>
+        </form>
+    </div>
 
-<div id="overlay" class="content-overlay" onclick="closeNav()"></div>
-@endsection
+    <div id="overlay" class="content-overlay" onclick="closeNav()"></div>
+</div>
+    @endsection
 
 @section('scripts')
 <script>
