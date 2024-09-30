@@ -2,6 +2,12 @@
 
 @section('title', 'Laporan')
 
+@section('styles')
+<style>
+    /* CSS khusus untuk halaman report */
+</style>
+@endsection
+
 @section('content')
 <div class="report-container">
     <div class="clock-container">
@@ -9,33 +15,33 @@
             <p class="clock-day clock-timer">
             </p>
             <p class="clock-label">
-            Day
+            Hari
             </p>
         </div>
         <div class="clock-col">
             <p class="clock-hours clock-timer">
             </p>
             <p class="clock-label">
-            Hours
+            Jam
             </p>
         </div>
         <div class="clock-col">
             <p class="clock-minutes clock-timer">
             </p>
             <p class="clock-label">
-            Minutes
+            Menit
             </p>
         </div>
         <div class="clock-col">
             <p class="clock-seconds clock-timer">
             </p>
             <p class="clock-label">
-            Seconds
+            Detik
             </p>
         </div>
     </div>
     <div class="chart-stats-row">
-        <div class="chart-calendar-container">
+        <div class="chart-report-container">
             <div class="monthly-visitors-chart">
                 <h3>Pengunjung Perbulan</h3>
                 <div class="stats-row">
@@ -60,8 +66,24 @@
             </div>
         </div>
         <div class="calendar-box">
-            <h3>Kalender</h3>
             <!-- Tambahkan komponen kalender di sini -->
+            <p class="current-date"></p>
+            <div class="icons-report">
+                <span id="prev" class="material-symbols-rounded">chevron_left</span>
+                <span id="next" class="material-symbols-rounded">chevron_right</span>
+            </div>
+            <div class="calendar">
+                <ul class="weeks">
+                    <li>Sun</li>
+                    <li>Mon</li>
+                    <li>Tue</li>
+                    <li>Wed</li>
+                    <li>Thu</li>
+                    <li>Fri</li>
+                    <li>Sat</li>
+                </ul>
+                <ul class="days"></ul>
+            </div>
         </div>
     </div>
     <div class="visitor-table">
@@ -96,4 +118,8 @@
         </table>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script src="{{ asset('js/calendar.js') }}"></script>
 @endsection

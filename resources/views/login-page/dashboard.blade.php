@@ -2,6 +2,38 @@
 
 @section('title', 'Dashboard')
 
+@section('styles')
+<style>
+    :root {
+        --primary-color: #4a90e2;
+        --secondary-color: #f5f7fa;
+        --text-color: #333;
+        --light-text: #777;
+        --border-color: #e0e0e0;
+        --hover-color: #3a7bd5;
+        --background-image: url('{{ asset('images/background_list.png') }}');
+        --background-header: url('{{ asset('images/background_header.png') }}');
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    /* CSS khusus untuk halaman dashboard */
+    .table-container {
+        margin-top: 20px;
+    }
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    /* ... tambahkan style lainnya ... */
+</style>
+@endsection
+
 @section('content')
 <div id="page-content">
     <div class="container">
