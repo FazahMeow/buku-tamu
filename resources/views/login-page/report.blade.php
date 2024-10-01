@@ -5,7 +5,24 @@
 @section('styles')
 <style>
     /* CSS khusus untuk halaman report */
+    .chart-report-container {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .monthly-visitors-chart h3 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    #visitorChart {
+        width: 100% !important;
+        height: 300px !important;
+    }
 </style>
+<canvas id="visitorChart" width="400" height="200"></canvas>
 @endsection
 
 @section('content')
@@ -58,7 +75,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="chart-placeholder"></div>
+                <canvas id="visitorChart" width="400" height="200"></canvas>
                 <div class="chart-labels">
                     <span>JAN</span><span>FEB</span><span>MAR</span><span>APR</span><span>MEI</span><span>JUN</span>
                     <span>JUL</span><span>AGS</span><span>SEP</span><span>OKT</span><span>NOV</span><span>DES</span>
@@ -122,4 +139,56 @@
 
 @section('scripts')
 <script src="{{ asset('js/calendar.js') }}"></script>
+<script>
+    function initializeReportPage() {
+        let filterPopupOverlay = document.getElementById("filterPopupOverlay");
+        if (filterPopupOverlay && !filterPopupOverlay.hasAttribute('data-event-attached')) {
+            filterPopupOverlay.addEventListener("click", function(event) {
+                if (event.target === this) {
+                    closeFilterPopup();
+                }
+            });
+            filterPopupOverlay.setAttribute('data-event-attached', 'true');
+        }
+
+        if (typeof closeFilterPopup === 'undefined') {
+            window.closeFilterPopup = function() {
+                let filterPopupOverlay = document.getElementById("filterPopupOverlay");
+                if (filterPopupOverlay) {
+                    filterPopupOverlay.style.display = "none";
+                }
+            }
+        }
+
+        var ctx = document.getElementById('visitorChart').getContext('2d');
+        var visitorChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['JAN', 'FEB', 'MAR', 'APR', 'MEI', 'JUN', 'JUL', 'AGS', 'SEP', 'OKT', 'NOV', 'DES'],
+                datasets: [{
+                    label: 'Jumlah Pengunjung',
+                    data: [12, 19, 3, 5, 2, 3, 10, 15, 8, 12, 5, 7],
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    // Panggil fungsi ini jika halaman dimuat langsung (bukan melalui AJAX)
+    if (typeof window.reportPageInitialized === 'undefined') {
+        initializeReportPage();
+        window.reportPageInitialized = true;
+    }
+</script>
 @endsection

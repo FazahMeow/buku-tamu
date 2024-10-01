@@ -7,6 +7,7 @@ body {
     color: var(--text-color);
     margin: 0;
     padding: 0;
+    min-height: 100vh; /* Tambahkan ini untuk memastikan background menutupi seluruh halaman */
 }
 
 .navbar {
@@ -73,6 +74,8 @@ h1, h2 {
 
 .table-container {
     overflow-x: auto;
+    opacity: 0;
+    animation: slideInFromBottom 0.5s ease-out forwards;
 }
 
 table {
@@ -123,6 +126,15 @@ tr:hover {
     color: #aaa;
 }
 
+#noResultsMessage {
+    font-style: italic;
+    color: #777;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
 .filter-button {
     background-color: #fff;
     color: var(--primary-color);
@@ -143,24 +155,32 @@ tr:hover {
 }
 
 .filter-popup {
+    background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+}
+
+.filter-popup-overlay {
     display: none;
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    z-index: 1001;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
 .close-popup {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
-    font-size: 1.5rem;
+    top: 10px;
+    right: 10px;
     cursor: pointer;
+    font-size: 20px;
 }
 
 .content-overlay {
@@ -209,7 +229,7 @@ tr:hover {
     width: 28px;
     aspect-ratio: 1;
     border-radius: 50%;
-    background: #E3AAD6;
+    background: #f0c348;
     transform-origin: top;
     display: grid;
     animation: l3-0 1s infinite linear;
@@ -218,14 +238,14 @@ tr:hover {
 .loader::after {
 content: "";
 grid-area: 1/1;
-background:#F4DD51;
+background:#127e47;
 border-radius: 50%;
 transform-origin: top;
 animation: inherit;
 animation-name: l3-1;
 }
 .loader::after {
-background: #F10C49;
+background: #1fb0e5;
 --s:180deg;
 }
 
@@ -295,7 +315,8 @@ background: #F10C49;
     font-weight: 500;
 }
 .calendar{
-    padding: 5px;
+    padding: 5px; 
+    margin-top: 10px;
 }
 .calendar ul{
     display: flex;
@@ -320,7 +341,7 @@ background: #F10C49;
 
 .calendar .days li {
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 20px;
     z-index: 1;
     position: relative;
     font-size: 0.8rem;
@@ -359,10 +380,6 @@ background: #F10C49;
 }
 .icons-report {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 10px;
-    margin-bottom: 20px;
 }
 .icons-report span {
     height: 30px;
@@ -569,6 +586,7 @@ background: #F10C49;
     left: 0;
     right: 0;
     height: 70px;
+    min-height: 70px; /* Tambahkan ini untuk memastikan tinggi minimum */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     background-image: var(--background-header);
     background-size: cover;
@@ -576,18 +594,26 @@ background: #F10C49;
     display: flex;
     align-items: center;
     padding: 10px 40px;
-    z-index: 1;
+    z-index: 1000;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.9); /* Tambahkan latar belakang semi-transparan */
+    z-index: -1;
 }
 
 .header img {
-    height: 50px;
+    height: 60px;
+    width: auto; /* Pastikan aspek rasio gambar tetap terjaga */
     margin-right: 10px;
-}
-
-.header h1 {
-    margin: 0;
-    font-size: 24px;
-    color: #333;
+    position: relative; /* Pastikan logo tetap di atas latar belakang */
+    z-index: 1;
 }
 
 /* Gaya untuk side navbar */
@@ -623,4 +649,25 @@ background: #F10C49;
 @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
+}
+
+@keyframes slideInFromBottom {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.table-container {
+    opacity: 0;
+    animation: slideInFromBottom 0.5s ease-out forwards;
+}
+
+:root {
+    --background-header: url('{{ asset('images/background_header.png') }}');
+    --background-image: url('{{ asset('images/background.png') }}');
 }

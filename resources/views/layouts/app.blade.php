@@ -38,7 +38,6 @@
         </div>
     </div>
 
-    
     @yield('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
@@ -92,14 +91,27 @@
                             }
                             
                             // Inisialisasi fungsi-fungsi dashboard jika ada
-                            if (typeof applyFilter === 'function') {
-                                applyFilter();
+                            if (url.includes('dashboard')) {
+                                if (typeof applyFilter === 'function') {
+                                    applyFilter();
+                                }
+                                if (typeof sortTable === 'function') {
+                                    sortTable(0);
+                                }
+                                if (typeof searchTable === 'function') {
+                                    searchTable();
+                                }
+                                if (typeof applyTableAnimation === 'function') {
+                                    applyTableAnimation();
+                                }
                             }
-                            if (typeof sortTable === 'function') {
-                                sortTable(0);
-                            }
-                            if (typeof searchTable === 'function') {
-                                searchTable();
+                            
+                            // Inisialisasi fungsi report page jika ada
+                            if (url.includes('report')) {
+                                if (typeof initializeReportPage === 'function' && !window.reportPageInitialized) {
+                                    initializeReportPage();
+                                    window.reportPageInitialized = true;
+                                }
                             }
                         }, 500);
                     })
@@ -156,9 +168,105 @@
             updateClock();
             setInterval(updateClock, 1000);
         });
+
+        function ensureHeaderSolid() {
+            const header = document.querySelector('.header');
+            if (header) {
+                header.style.setProperty('--background-header', "url('{{ asset('images/background_header.png') }}')");
+                header.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+            }
+        }
+
+        // Panggil fungsi ini setelah konten dimuat
+        ensureHeaderSolid();
+
+        // Tambahkan ke dalam fungsi loadContent
+        function loadContent(url) {
+            showLoader();
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newContent = doc.querySelector('#page-content').innerHTML;
+                    const newStyles = doc.querySelector('style');
+                    const newScripts = doc.querySelectorAll('script');
+
+                    setTimeout(() => {
+                        pageContent.innerHTML = newContent;
+                        
+                        // Tambahkan style baru
+                        if (newStyles) {
+                            document.head.appendChild(newStyles);
+                        }
+                        
+                        // Jalankan script baru
+                        newScripts.forEach(script => {
+                            const newScript = document.createElement('script');
+                            newScript.textContent = script.textContent;
+                            document.body.appendChild(newScript);
+                        });
+
+                        hideLoader();
+                        updateActiveNavItem(url);
+                        
+                        // Inisialisasi kalender jika ada
+                        if (typeof initializeCalendar === 'function') {
+                            initializeCalendar();
+                        }
+                        
+                        // Inisialisasi fungsi-fungsi dashboard jika ada
+                        if (url.includes('dashboard')) {
+                            if (typeof applyFilter === 'function') {
+                                applyFilter();
+                            }
+                            if (typeof sortTable === 'function') {
+                                sortTable(0);
+                            }
+                            if (typeof searchTable === 'function') {
+                                searchTable();
+                            }
+                            if (typeof applyTableAnimation === 'function') {
+                                applyTableAnimation();
+                            }
+                        }
+                        
+                        // Inisialisasi fungsi report page jika ada
+                        if (url.includes('report')) {
+                            if (typeof initializeReportPage === 'function' && !window.reportPageInitialized) {
+                                initializeReportPage();
+                                window.reportPageInitialized = true;
+                            }
+                        }
+                    }, 500);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    hideLoader();
+                });
+        }
+
+        // Panggil juga saat halaman di-refresh
+        window.addEventListener('load', ensureHeaderSolid);
+
+        window.addEventListener('load', function() {
+            const header = document.querySelector('.header');
+            console.log('Header height on load:', header.offsetHeight);
+        });
+
+        window.addEventListener('beforeunload', function() {
+            const header = document.querySelector('.header');
+            console.log('Header height before unload:', header.offsetHeight);
+        });
+
+        window.addEventListener('load', function() {
+            const header = document.querySelector('.header');
+            console.log('Header height:', header.offsetHeight);
+            console.log('Header background-image:', getComputedStyle(header).backgroundImage);
+        });
     </script>
     <!-- Tambahkan ini sebelum tag </body> -->
-    <script src="{{ asset('js/calendar.js') }}"></script>
+    <!-- <script src="{{ asset('js/calendar.js') }}"></script> -->
     @yield('scripts')
 </body>
 </html>

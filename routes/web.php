@@ -22,9 +22,7 @@ Route::get('/login', function () {
 Route::post('/login', [AuthController::class, 'login']);
     //->middleware('dashboard');
 
-Route::get('/dashboard', function () {
-    return view('login-page.dashboard');
-})->name('dashboard');
+Route::get('/dashboard', [VisitorController::class, 'index'])->name('dashboard');
 
 Route::post('/visitor', [VisitorController::class, 'store'])
      ->name('visitor.store');
