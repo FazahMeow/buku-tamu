@@ -2,6 +2,29 @@
 
 @section('title', 'Laporan')
 
+@section('styles')
+<style>
+    /* CSS khusus untuk halaman report */
+    .chart-report-container {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .monthly-visitors-chart h3 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    #visitorChart {
+        width: 100% !important;
+        height: 300px !important;
+    }
+</style>
+<canvas id="visitorChart" width="400" height="200"></canvas>
+@endsection
+
 @section('content')
 <div class="report-container">
     <div class="clock-container">
@@ -9,33 +32,33 @@
             <p class="clock-day clock-timer">
             </p>
             <p class="clock-label">
-            Day
+            Hari
             </p>
         </div>
         <div class="clock-col">
             <p class="clock-hours clock-timer">
             </p>
             <p class="clock-label">
-            Hours
+            Jam
             </p>
         </div>
         <div class="clock-col">
             <p class="clock-minutes clock-timer">
             </p>
             <p class="clock-label">
-            Minutes
+            Menit
             </p>
         </div>
         <div class="clock-col">
             <p class="clock-seconds clock-timer">
             </p>
             <p class="clock-label">
-            Seconds
+            Detik
             </p>
         </div>
     </div>
     <div class="chart-stats-row">
-        <div class="chart-calendar-container">
+        <div class="chart-report-container">
             <div class="monthly-visitors-chart">
                 <h3>Pengunjung Perbulan</h3>
                 <div class="stats-row">
@@ -52,7 +75,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="chart-placeholder"></div>
+                <canvas id="visitorChart" width="400" height="200"></canvas>
                 <div class="chart-labels">
                     <span>JAN</span><span>FEB</span><span>MAR</span><span>APR</span><span>MEI</span><span>JUN</span>
                     <span>JUL</span><span>AGS</span><span>SEP</span><span>OKT</span><span>NOV</span><span>DES</span>
@@ -60,8 +83,24 @@
             </div>
         </div>
         <div class="calendar-box">
-            <h3>Kalender</h3>
             <!-- Tambahkan komponen kalender di sini -->
+            <p class="current-date"></p>
+            <div class="icons-report">
+                <span id="prev" class="material-symbols-rounded">chevron_left</span>
+                <span id="next" class="material-symbols-rounded">chevron_right</span>
+            </div>
+            <div class="calendar">
+                <ul class="weeks">
+                    <li>Sun</li>
+                    <li>Mon</li>
+                    <li>Tue</li>
+                    <li>Wed</li>
+                    <li>Thu</li>
+                    <li>Fri</li>
+                    <li>Sat</li>
+                </ul>
+                <ul class="days"></ul>
+            </div>
         </div>
     </div>
     <div class="visitor-table">
@@ -96,4 +135,60 @@
         </table>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script src="{{ asset('js/calendar.js') }}"></script>
+<script>
+    function initializeReportPage() {
+        let filterPopupOverlay = document.getElementById("filterPopupOverlay");
+        if (filterPopupOverlay && !filterPopupOverlay.hasAttribute('data-event-attached')) {
+            filterPopupOverlay.addEventListener("click", function(event) {
+                if (event.target === this) {
+                    closeFilterPopup();
+                }
+            });
+            filterPopupOverlay.setAttribute('data-event-attached', 'true');
+        }
+
+        if (typeof closeFilterPopup === 'undefined') {
+            window.closeFilterPopup = function() {
+                let filterPopupOverlay = document.getElementById("filterPopupOverlay");
+                if (filterPopupOverlay) {
+                    filterPopupOverlay.style.display = "none";
+                }
+            }
+        }
+
+        var ctx = document.getElementById('visitorChart').getContext('2d');
+        var visitorChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['JAN', 'FEB', 'MAR', 'APR', 'MEI', 'JUN', 'JUL', 'AGS', 'SEP', 'OKT', 'NOV', 'DES'],
+                datasets: [{
+                    label: 'Jumlah Pengunjung',
+                    data: [12, 19, 3, 5, 2, 3, 10, 15, 8, 12, 5, 7],
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    // Panggil fungsi ini jika halaman dimuat langsung (bukan melalui AJAX)
+    if (typeof window.reportPageInitialized === 'undefined') {
+        initializeReportPage();
+        window.reportPageInitialized = true;
+    }
+</script>
 @endsection
