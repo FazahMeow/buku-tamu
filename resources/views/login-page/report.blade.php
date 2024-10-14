@@ -18,11 +18,45 @@
     }
     
     #visitorChart {
-        width: 100% !important;
+        width: 150% !important;
         height: 300px !important;
     }
+    .chart-stats-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    .monthly-visitors-chart{
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }   
+    .monthly-visitors-chart h3, .table-header-report h3{
+        color: var(--primary-color);
+    }
+
+    .chart-placeholder {
+        height: 200px;
+        background-color: #f0f0f0;
+        margin-bottom: 10px;
+    }
+    .chart-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+    }
+    .chart-labels span {
+        font-size: 0.8rem;
+        color: #666;
+    }
+    .visitor-table {
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
 </style>
-<canvas id="visitorChart" width="400" height="200"></canvas>
 @endsection
 
 @section('content')
@@ -58,28 +92,26 @@
         </div>
     </div>
     <div class="chart-stats-row">
-        <div class="chart-report-container">
-            <div class="monthly-visitors-chart">
-                <h3>Pengunjung Perbulan</h3>
-                <div class="stats-row">
-                    <div class="stat-box total-visitors">
-                        <i class="fas fa-walking"></i>
-                        <div class="stat-content">
-                            <h4>Total Pengunjung: 66</h4>
-                        </div>
-                    </div>
-                    <div class="stat-box today-visitors">
-                        <i class="fas fa-user-tie"></i>
-                        <div class="stat-content">
-                            <h4>Pengunjung Hari Ini: 66</h4>
-                        </div>
+        <div class="monthly-visitors-chart">
+            <h3>Pengunjung Perbulan</h3>
+            <div class="stats-row">
+                <div class="stat-box total-visitors">
+                    <i class="fas fa-walking"></i>
+                    <div class="stat-content">
+                        <h4>Total Pengunjung: 66</h4>
                     </div>
                 </div>
-                <canvas id="visitorChart" width="400" height="200"></canvas>
-                <div class="chart-labels">
-                    <span>JAN</span><span>FEB</span><span>MAR</span><span>APR</span><span>MEI</span><span>JUN</span>
-                    <span>JUL</span><span>AGS</span><span>SEP</span><span>OKT</span><span>NOV</span><span>DES</span>
+                <div class="stat-box today-visitors">
+                    <i class="fas fa-user-tie"></i>
+                    <div class="stat-content">
+                        <h4>Pengunjung Hari Ini: 66</h4>
+                    </div>
                 </div>
+            </div>
+            <canvas id="visitorChart" width="400" height="200"></canvas>
+            <div class="chart-labels">
+                <span>JAN</span><span>FEB</span><span>MAR</span><span>APR</span><span>MEI</span><span>JUN</span>
+                <span>JUL</span><span>AGS</span><span>SEP</span><span>OKT</span><span>NOV</span><span>DES</span>
             </div>
         </div>
         <div class="calendar-box">
@@ -112,12 +144,11 @@
                 <tr>
                     <th>No</th>
                     <th>Nama</th>
-                    <th>Nomor HP</th>
+                    <th>Nomor HP</th>   
                     <th>Email</th>
                     <th>Instansi</th>
                     <th>Tujuan</th>
                     <th>Keterangan</th>
-                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -128,7 +159,6 @@
                     <td>zxcvbnm@asd.com</td>
                     <td>QWERTY</td>
                     <td>qAWSERTY</td>
-                    <td>asdasdasdasd...</td>
                 </tr>
                 <!-- Tambahkan baris lain sesuai kebutuhan -->
             </tbody>
@@ -138,6 +168,7 @@
 @endsection
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="{{ asset('js/calendar.js') }}"></script>
 <script>
     function initializeReportPage() {
@@ -162,7 +193,7 @@
 
         var ctx = document.getElementById('visitorChart').getContext('2d');
         var visitorChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'line',
             data: {
                 labels: ['JAN', 'FEB', 'MAR', 'APR', 'MEI', 'JUN', 'JUL', 'AGS', 'SEP', 'OKT', 'NOV', 'DES'],
                 datasets: [{
@@ -185,10 +216,11 @@
         });
     }
 
-    // Panggil fungsi ini jika halaman dimuat langsung (bukan melalui AJAX)
-    if (typeof window.reportPageInitialized === 'undefined') {
-        initializeReportPage();
-        window.reportPageInitialized = true;
-    }
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     if (typeof window.reportPageInitialized === 'undefined') {
+    //         initializeReportPage();
+    //         window.reportPageInitialized = true;
+    //     }
+    // });    
 </script>
 @endsection

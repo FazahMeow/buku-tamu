@@ -50,6 +50,14 @@ body {
     margin-right: 0.5rem;
 }
 
+.navbar-item-keluar {
+    color: #ff0000 !important;
+}
+
+.navbar-item-keluar:hover {
+    font-weight: bold;
+}
+
 #main {
     position: relative;
     margin-top: 100px;
@@ -540,44 +548,41 @@ background: #1fb0e5;
     font-size: 2.5rem;
     margin: 10px 0 0;
 }
-.chart-stats-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-.chart-report-container {
-    width: 60%;
-}
-.monthly-visitors-chart{
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-}   
-.monthly-visitors-chart h3, .table-header-report h3{
-    color: var(--primary-color);
-}
+// .chart-stats-row {
+//     display: flex;
+//     justify-content: space-between;
+//     margin-bottom: 20px;
+// }
+// .monthly-visitors-chart{
+//     background-color: #fff;
+//     border-radius: 8px;
+//     padding: 20px;
+//     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+// }   
+// .monthly-visitors-chart h3, .table-header-report h3{
+//     color: var(--primary-color);
+// }
 
-.chart-placeholder {
-    height: 200px;
-    background-color: #f0f0f0;
-    margin-bottom: 10px;
-}
-.chart-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-}
-.chart-labels span {
-    font-size: 0.8rem;
-    color: #666;
-}
-.visitor-table {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+// .chart-placeholder {
+//     height: 200px;
+//     background-color: #f0f0f0;
+//     margin-bottom: 10px;
+// }
+// .chart-labels {
+//     display: flex;
+//     justify-content: space-between;
+//     font-size: 0.8rem;
+// }
+// .chart-labels span {
+//     font-size: 0.8rem;
+//     color: #666;
+// }
+// .visitor-table {
+//     background-color: #fff;
+//     border-radius: 8px;
+//     padding: 20px;
+//     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+// }
 
 /* Gaya untuk header */
 .header {

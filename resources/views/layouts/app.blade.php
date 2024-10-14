@@ -25,6 +25,9 @@
         <a href="{{ route('report') }}" class="navbar-item {{ Request::is('dashboard/report') ? 'active' : '' }}" data-target="report">
             <i class="fas fa-chart-bar"></i> Laporan
         </a>
+        <a href="#" class="navbar-item navbar-item-keluar">
+            <i class="fas fa-sign-out-alt"></i> Keluar
+        </a>
     </div>
 
     <div id="main">
