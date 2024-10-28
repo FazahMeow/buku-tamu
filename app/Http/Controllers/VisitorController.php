@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Visitor;
+use App\Models\FormData;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -11,7 +12,7 @@ class VisitorController extends Controller
     public function index()
     {
         // Mengambil semua data visitor
-        $visitors = Visitor::all();
+        $visitors = FormData::all();
 
         // Mengirim data visitors ke view dashboard
         return view('login-page.dashboard', compact('visitors'));

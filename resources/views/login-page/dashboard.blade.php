@@ -67,12 +67,12 @@
                         @foreach($visitors as $index => $visitor)
                         <tr class="table-row" style="animation-delay: {{ $index * 0.05 }}s;">
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $visitor->name }}</td>
-                            <td>{{ $visitor->phone }}</td>
+                            <td>{{ $visitor->nama }}</td>
+                            <td>{{ $visitor->nomorhp }}</td>
                             <td>{{ $visitor->email }}</td>
-                            <td>{{ $visitor->company }}</td>
-                            <td>{{ $visitor->purpose }}</td>
-                            <td>{{ $visitor->remarks }}</td>
+                            <td>{{ $visitor->instansi }}</td>
+                            <td>{{ $visitor->tujuan }}</td>
+                            <td>{{ $visitor->keterangan }}</td>
                         </tr>
                         @endforeach
                     @else

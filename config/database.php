@@ -64,7 +64,7 @@ return [
         ],
 
         // Koneksi tambahan untuk mengakses database di BukuTamu_laravel (my_database)
-        'form_database' => [
+        'form_db' => [
             'driver' => 'mysql',
             'host' => env('FORM_DB_HOST', '127.0.0.1'),
             'port' => env('FORM_DB_PORT', '3306'),
