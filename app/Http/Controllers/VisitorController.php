@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Visitor;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class VisitorController extends Controller
 {
@@ -14,6 +15,30 @@ class VisitorController extends Controller
 
         // Mengirim data visitors ke view dashboard
         return view('login-page.dashboard', compact('visitors'));
+    }
+
+    public function report()
+    {
+        // Ambil data pengunjung hari ini
+        $todayVisitors = Visitor::whereDate('created_at', Carbon::today())->count();
+
+        // Ambil total pengunjung per bulan
+        $monthlyVisitors = Visitor::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+            ->groupBy('month')
+            ->pluck('count', 'month')
+            ->toArray();
+
+        // Lengkapi data pengunjung per bulan (0 jika tidak ada data)
+        $totalVisitorsPerMonth = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $totalVisitorsPerMonth[$i] = $monthlyVisitors[$i] ?? 0;
+        }
+
+        // Ambil nama, email, dan waktu masuk untuk tabel
+        $visitorTableData = Visitor::select('name', 'email', 'created_at')->get();
+
+        // Mengirim data ke view report
+        return view('login-page.report', compact('totalVisitorsPerMonth', 'todayVisitors', 'visitorTableData'));
     }
 
     public function store(Request $request)

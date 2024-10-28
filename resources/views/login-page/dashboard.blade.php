@@ -102,6 +102,11 @@
     </div>
 
     <div id="overlay" class="content-overlay" onclick="closeNav()"></div>
+    @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 </div>
     @endsection
 

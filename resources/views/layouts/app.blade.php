@@ -16,18 +16,33 @@
     </div>
 
     <div id="mySidenav" class="sidenav">
-        <a href="{{ route('dashboard') }}" class="navbar-item {{ Request::is('dashboard') ? 'active' : '' }}" data-target="dashboard">
+        <a href="{{ route('report') }}" class="navbar-item {{ Request::is('dashboard/report') ? 'active' : '' }}" data-target="report">
             <i class="fas fa-home-alt"></i> Beranda
         </a>
-        <a href="#" class="navbar-item">
+        <a href="{{ route('dashboard') }}" class="navbar-item {{ Request::is('dashboard') ? 'active' : '' }}" data-target="dashboard">
             <i class="fas fa-users"></i> Pengunjung
         </a>
-        <a href="{{ route('report') }}" class="navbar-item {{ Request::is('dashboard/report') ? 'active' : '' }}" data-target="report">
+        <a href="#" class="navbar-item">
             <i class="fas fa-chart-bar"></i> Laporan
         </a>
-        <a href="#" class="navbar-item navbar-item-keluar">
+        <a href="#" class="navbar-item navbar-item-keluar" role="button" tabindex="0">
             <i class="fas fa-sign-out-alt"></i> Keluar
         </a>
+        <!-- Modal Logout -->
+        <div id="logoutModal" class="modal" role="dialog" aria-modal="true">
+            <div class="modal-content">
+                <h2>Konfirmasi Logout</h2>
+                <p>Apakah Anda yakin ingin keluar?</p>
+                <div class="modal-buttons">
+                    <button type="button" id="confirmLogout" class="btn-confirm">Ya</button>
+                    <button type="button" id="cancelLogout" class="btn-cancel">Tidak</button>
+                </div>
+            </div>
+        </div>
+
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;" autocomplete="off">
+            @csrf
+        </form>
     </div>
 
     <div id="main">
@@ -44,10 +59,72 @@
     @yield('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
+            let isLoggingOut = false;
             const navLinks = document.querySelectorAll('.navbar-item[data-target]');
             const pageContent = document.getElementById('page-content');
             const pageLoader = document.getElementById('page-loader');
             const mainContainer = document.getElementById('main-container');
+            // Logout
+            const logoutLink = document.querySelector('.navbar-item-keluar');
+            const logoutModal = document.getElementById('logoutModal');
+            const confirmLogout = document.getElementById('confirmLogout');
+            const cancelLogout = document.getElementById('cancelLogout');
+            const logoutForm = document.getElementById('logout-form');
+
+            if (logoutLink && logoutModal && confirmLogout && cancelLogout && logoutForm) {
+                // Tampilkan modal saat link logout diklik
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    logoutModal.style.display = 'block';
+                });
+
+                // Konfirmasi logout
+                confirmLogout.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (!isLoggingOut) {
+                        isLoggingOut = true;
+                        logoutForm.submit();
+                    }
+                });
+
+                // Batalkan logout
+                cancelLogout.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    logoutModal.style.display = 'none';
+                    isLoggingOut = false;
+                });
+
+                // Tutup modal jika mengklik di luar modal
+                window.addEventListener('click', function(e) {
+                    if (e.target === logoutModal) {
+                        logoutModal.style.display = 'none';
+                        isLoggingOut = false;
+                    }
+                });
+
+                // Tambahkan event listener untuk tombol ESC
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && logoutModal.style.display === 'block') {
+                        logoutModal.style.display = 'none';
+                        isLoggingOut = false;
+                    }
+                });
+            }
+
+            // Prevent form submission on enter key
+            document.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && logoutModal.style.display === 'block') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Disable autocomplete for the entire modal
+            logoutModal.setAttribute('autocomplete', 'off');
+        
 
             function showLoader() {
                 pageLoader.classList.add('show');

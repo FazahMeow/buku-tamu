@@ -57,4 +57,4 @@ function initializeCalendar() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', initializeCalendar);
+// document.addEventListener('DOMContentLoaded', initializeCalendar);

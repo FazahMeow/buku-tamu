@@ -106,6 +106,104 @@ tr:hover {
     background-color: #f8f9fa;
 }
 
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 400px;
+    position: relative;
+    animation: slideIn 0.3s ease-in-out;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-confirm, .btn-cancel {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-confirm {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-confirm:focus, .btn-cancel:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0,123,255,.25);
+}
+
+.btn-confirm:hover {
+    background-color: #c82333;
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background-color: #5a6268;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 .search-filter-container {
     display: flex;
     gap: 1rem;
@@ -290,13 +388,13 @@ background: #1fb0e5;
     border-radius: 5px;
     width: 48%;
 }
-.calendar-box {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    width: 38%;
-    padding: 10px;
-}
+// .calendar-box {
+//     background: #fff;
+//     border-radius: 10px;
+//     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+//     width: 38%;
+//     padding: 10px;
+// }
 .icons-report {
     display: flex;
 }
@@ -321,44 +419,6 @@ background: #1fb0e5;
 .current-date {
     font-size: 1.2rem;
     font-weight: 500;
-}
-.calendar{
-    padding: 5px; 
-    margin-top: 10px;
-}
-.calendar ul{
-    display: flex;
-    flex-wrap: wrap;
-    list-style: none;
-    text-align: center;
-    padding: 0;
-    margin: 0;
-}
-.calendar .weeks {
-    margin-bottom: 10px;
-}
-
-.calendar .weeks li {
-    font-weight: 500;
-    font-size: 0.8rem;
-}
-
-.calendar .days {
-    margin-bottom: 20px;
-}
-
-.calendar .days li {
-    cursor: pointer;
-    margin-top: 20px;
-    z-index: 1;
-    position: relative;
-    font-size: 0.8rem;
-}
-
-.calendar ul li {
-    position: relative;
-    width: calc(100% / 7);
-    font-size: 0.8rem;
 }
 
 .days li.inactive {
@@ -532,6 +592,7 @@ background: #1fb0e5;
         flex-direction: row;
         padding-top: 20px;
         padding-bottom: 20px;
+        width: 100%;
     }
     .clock-col {
         & + & {
@@ -548,43 +609,7 @@ background: #1fb0e5;
     font-size: 2.5rem;
     margin: 10px 0 0;
 }
-// .chart-stats-row {
-//     display: flex;
-//     justify-content: space-between;
-//     margin-bottom: 20px;
-// }
-// .monthly-visitors-chart{
-//     background-color: #fff;
-//     border-radius: 8px;
-//     padding: 20px;
-//     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-// }   
-// .monthly-visitors-chart h3, .table-header-report h3{
-//     color: var(--primary-color);
-// }
 
-// .chart-placeholder {
-//     height: 200px;
-//     background-color: #f0f0f0;
-//     margin-bottom: 10px;
-// }
-// .chart-labels {
-//     display: flex;
-//     justify-content: space-between;
-//     font-size: 0.8rem;
-// }
-// .chart-labels span {
-//     font-size: 0.8rem;
-//     color: #666;
-// }
-// .visitor-table {
-//     background-color: #fff;
-//     border-radius: 8px;
-//     padding: 20px;
-//     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-// }
-
-/* Gaya untuk header */
 .header {
     position: fixed;
     top: 0;
