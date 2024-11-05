@@ -16,10 +16,13 @@
     </div>
 
     <div id="mySidenav" class="sidenav">
-        <a href="{{ route('report') }}" class="navbar-item {{ Request::is('dashboard/report') ? 'active' : '' }}" data-target="report">
+        <!-- Beranda -->
+        <a href="{{ route('dashboard') }}" class="navbar-item {{ Request::routeIs('dashboard') ? 'active' : '' }}">
             <i class="fas fa-home-alt"></i> Beranda
         </a>
-        <a href="{{ route('dashboard') }}" class="navbar-item {{ Request::is('dashboard') ? 'active' : '' }}" data-target="dashboard">
+        
+        <!-- Pengunjung -->
+        <a href="{{ route('pengunjung') }}" class="navbar-item {{ Request::routeIs('pengunjung') ? 'active' : '' }}">
             <i class="fas fa-users"></i> Pengunjung
         </a>
         <a href="#" class="navbar-item">

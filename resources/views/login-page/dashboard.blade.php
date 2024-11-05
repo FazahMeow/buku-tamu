@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Laporan')
 
 @section('styles')
 <style>
@@ -20,296 +20,564 @@
         padding: 0;
         box-sizing: border-box;
     }
-    /* CSS khusus untuk halaman dashboard */
-    .table-container {
+
+    /* CSS khusus untuk halaman report */
+    .chart-report-container {
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .time-range-selector {
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        background-color: white;
+        font-size: 14px;
+        color: var(--text-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        outline: none;
+        width: 150px;
+    }
+
+    .time-range-selector:hover {
+        border-color: var(--primary-color);
+    }
+
+    .time-range-selector:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+    }
+        
+    #visitorChart {
+        width: 100% !important;
+        height: 300px !important;
+    }
+
+    .table-and-calendar-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .monthly-visitors-chart {
+        width: 100%;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+    .chart-placeholder {
+        height: 200px;
+        background-color: #f0f0f0;
+        margin-bottom: 10px;
+    }
+    .chart-container {
+        position: relative;
+        width: 100%;
+        height: auto;
         margin-top: 20px;
     }
-    .table-header {
+
+    canvas {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .visitor-table {
+        width: 100%; /* Adjust to fit next to the calendar */
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .table-header-report h3 {
+        color: var(--primary-color);
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 50%;
+        right: -500px;
+        width: 500px;
+        height: 500px;
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        transition: right 0.5s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        transform: translateY(-50%);
+        z-index: 1000;
+    }
+
+    .sidebar-header {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .sidebar-handle {
+        position: absolute;
+        top: 50%;
+        left: -30px;
+        height: 500px;
+        width: 30px;
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+        transition: right 0.5s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        transform: translateY(-50%);
+        border-radius: 10px 0 0 10px;
+        cursor: pointer;
+        z-index: 1001;
+    }
+
+    .sidebar-handle span {
+        font-size: 16px;
+        white-space: nowrap;
+        transform: rotate(-90deg);
+        letter-spacing: 5px;
+    }
+
+    .sidebar.show {
+        right: 0;
+    }
+
+    .sidebar-toggle {
+        position: fixed;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%) rotate(-90deg);
+        transform-origin: right center;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        cursor: pointer;
+        z-index: 1001;
+        transition: right 0.3s ease-in-out;
+    }
+
+    .sidebar-toggle.open {
+        right: 300px; /* Geser tombol saat sidebar terbuka */
+    }
+
+    @keyframes slideIn {
+        from { transform: translateY(-50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .calendar {
+        font-family: Arial, sans-serif;
+    }
+
+    .calendar-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 10px;
     }
-    /* ... tambahkan style lainnya ... */
+
+    .calendar-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 1;
+    }
+
+    .calendar-header button {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    .calendar .weeks {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .calendar .days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+    }
+
+    .calendar .days li {
+        list-style: none;
+        text-align: center;
+        padding: 5px;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .calendar .days li:hover {
+        background-color: #e0e0e0;
+    }
+
+    .calendar-popup.show {
+        display: flex;
+        opacity: 1;
+    }
+
+    .close-popup {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close-popup:hover {
+        color: #000;
+    }
 </style>
 @endsection
 
 @section('content')
-<div id="page-content">
-    <div class="container">
-        <!-- Visitor Table Section -->
-        <div class="table-container">
-            <div class="table-header">
-                <h2>Daftar Pengunjung</h2>
-                <div class="search-filter-container">
-                    <div class="search-wrapper">
-                        <input type="text" id="searchBar" class="search-bar" placeholder="Cari pengunjung..." onkeyup="searchTable()">
-                    </div>
-                    <button class="filter-button" onclick="openFilterPopup()" title="Filter">
-                        <i class="fas fa-filter"></i>
-                    </button>
-                </div>
+<div class="report-container">
+    <!-- Jam -->
+    <div class="clock-container">
+        <div class="clock-col">
+            <p class="clock-day clock-timer">
+            </p>
+            <p class="clock-label">
+            Hari
+            </p>
+        </div>
+        <div class="clock-col">
+            <p class="clock-hours clock-timer">
+            </p>
+            <p class="clock-label">
+            Jam
+            </p>
+        </div>
+        <div class="clock-col">
+            <p class="clock-minutes clock-timer">
+            </p>
+            <p class="clock-label">
+            Menit
+            </p>
+        </div>
+        <div class="clock-col">
+            <p class="clock-seconds clock-timer">
+            </p>
+            <p class="clock-label">
+            Detik
+            </p>
+        </div>
+    </div>
+    <!-- Chart -->
+    <div class="chart-report-container">
+        <div class="monthly-visitors-chart">
+            <div class="btn-time-range">
+                <select id="timeRangeSelector" class="time-range-selector">
+                    <option value="monthly" selected>Bulanan</option>
+                    <option value="yearly">Tahunan</option>
+                </select>
             </div>
-            <table id="visitorTable">
-                <thead>
-                    <tr>
-                        <th onclick="sortTable(0)">No</th>
-                        <th onclick="sortTable(1)">Nama</th>
-                        <th onclick="sortTable(2)">Nomor HP</th>
-                        <th onclick="sortTable(3)">Email</th>
-                        <th onclick="sortTable(4)">Instansi</th>
-                        <th onclick="sortTable(5)">Tujuan</th>
-                        <th onclick="sortTable(6)">Keterangan</th>
-                    </tr>
-                </thead>
-                <tbody id="visitorTableBody">
-                    @if(isset($visitors) && $visitors->count() > 0)
-                        @foreach($visitors as $index => $visitor)
-                        <tr class="table-row" style="animation-delay: {{ $index * 0.05 }}s;">
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $visitor->nama }}</td>
-                            <td>{{ $visitor->nomorhp }}</td>
-                            <td>{{ $visitor->email }}</td>
-                            <td>{{ $visitor->instansi }}</td>
-                            <td>{{ $visitor->tujuan }}</td>
-                            <td>{{ $visitor->keterangan }}</td>
-                        </tr>
-                        @endforeach
-                    @else
-                        <tr class="table-row">
-                            <td colspan="7">Tidak ada data pengunjung.</td>
-                        </tr>
-                    @endif
-                </tbody>
-            </table>
-            <div id="noResultsMessage" style="display: none; text-align: center; margin-top: 20px;">
-                Mohon maaf, keyword yang Anda cari tidak ditemukan.
+            
+            <div class="chart-container">
+                <canvas id="visitorChart"></canvas>
             </div>
         </div>
     </div>
 
-    <div id="filterPopupOverlay" class="filter-popup-overlay">
-        <div id="filterPopup" class="filter-popup">
-            <span class="close-popup" onclick="closeFilterPopup()">&times;</span>
-            <h2>Filter Pengunjung</h2>
-            <form id="filterForm">
-                <input type="text" id="nameFilter" placeholder="Nama">
-                <input type="text" id="instansiFilter" placeholder="Instansi">
-                <input type="text" id="purposeFilter" placeholder="Tujuan">
-                <button type="button" onclick="applyFilter()">Terapkan</button>
-            </form>
+    <!-- Visitor Table -->
+    <div class="visitor-table">
+        <div class="table-header-report">
+            <h3>Pengunjung Bulan Ini</h3>
         </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>Tanggal Kunjungan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($visitorTableData as $index => $visitor)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $visitor->nama }}</td>
+                    <td>{{ $visitor->email }}</td>
+                    <td>
+                        @if($visitor->dibuat_pada instanceof \Carbon\Carbon)
+                            {{ $visitor->dibuat_pada->format('d F Y') }}
+                        @else
+                            {{ $visitor->dibuat_pada }}
+                        @endif
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="4" class="text-center">Tidak ada pengunjung bulan ini</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
-
-    <div id="overlay" class="content-overlay" onclick="closeNav()"></div>
-    @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
 </div>
-    @endsection
+
+<!-- Sidebar untuk kalender -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-handle">
+            <span>KALENDER</span>
+        </div>
+    </div>
+    <div class="calendar">
+        <div class="calendar-header">
+            <button id="prevMonth">&lt;</button>
+            <span id="currentMonth"></span>
+            <button id="nextMonth">&gt;</button>
+        </div>
+        <div class="calendar-body">
+            <div class="weeks">
+                <span>Min</span>
+                <span>Sen</span>
+                <span>Sel</span>
+                <span>Rab</span>
+                <span>Kam</span>
+                <span>Jum</span>
+                <span>Sab</span>
+            </div>
+            <div class="days"></div>
+        </div>
+    </div>
+</div>
+@endsection
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    function applyFilter() {
-        const nameFilter = document.getElementById('nameFilter').value.toLowerCase();
-        const instansiFilter = document.getElementById('instansiFilter').value.toLowerCase();
-        const purposeFilter = document.getElementById('purposeFilter').value.toLowerCase();
+    
+    let visitorChart = null;
 
-        const rows = document.getElementById('visitorTableBody').getElementsByTagName('tr');
-
-        for (let i = 0; i < rows.length; i++) {
-            const name = rows[i].getElementsByTagName('td')[1].innerText.toLowerCase();
-            const instansi = rows[i].getElementsByTagName('td')[4].innerText.toLowerCase();
-            const purpose = rows[i].getElementsByTagName('td')[5].innerText.toLowerCase();
-
-            const nameMatch = name.includes(nameFilter);
-            const instansiMatch = instansi.includes(instansiFilter);
-            const purposeMatch = purpose.includes(purposeFilter);
-
-            if (nameMatch && instansiMatch && purposeMatch) {
-                rows[i].style.display = '';
-            } else {
-                rows[i].style.display = 'none';
-            }
-        }
-
-        closeFilterPopup();
-    }
-
-    function openFilterPopup() {
-        document.getElementById("filterPopupOverlay").style.display = "flex";
-    }
-
-    function closeFilterPopup() {
-        document.getElementById("filterPopupOverlay").style.display = "none";
-    }
-
-    // Tambahkan event listener untuk menutup pop-up ketika mengklik di luar area pop-up
-    document.getElementById("filterPopupOverlay").addEventListener("click", function(event) {
-        if (event.target === this) {
-            closeFilterPopup();
-        }
-    });
-
-    function sortTable(n) {
-        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-        table = document.getElementById("visitorTable");
-        switching = true;
-        // Atur arah pengurutan menjadi ascending
-        dir = "asc";
-        
-        while (switching) {
-            switching = false;
-            rows = table.rows;
-            
-            for (i = 1; i < (rows.length - 1); i++) {
-                shouldSwitch = false;
-                x = rows[i].getElementsByTagName("TD")[n];
-                y = rows[i + 1].getElementsByTagName("TD")[n];
-                
-                // Periksa apakah dua baris harus ditukar berdasarkan arah, asc atau desc
-                if (dir == "asc") {
-                    if (compareValues(x.innerHTML, y.innerHTML) > 0) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                } else if (dir == "desc") {
-                    if (compareValues(x.innerHTML, y.innerHTML) < 0) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                }
-            }
-            
-            if (shouldSwitch) {
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-                switchcount++;
-            } else {
-                // Jika tidak ada pertukaran dan arah adalah "asc",
-                // atur arah menjadi "desc" dan jalankan loop while lagi
-                if (switchcount == 0 && dir == "asc") {
-                    dir = "desc";
-                    switching = true;
-                }
-            }
-        }
-        
-        // Perbarui tampilan ikon sorting
-        updateSortIcon(n, dir);
-    }
-
-    function compareValues(a, b) {
-        // Hapus karakter non-numeric jika ada
-        a = a.replace(/[^\d.-]/g, '');
-        b = b.replace(/[^\d.-]/g, '');
-        
-        // Periksa apakah nilai adalah angka
-        if (!isNaN(a) && !isNaN(b)) {
-            return Number(a) - Number(b);
-        }
-        
-        // Jika bukan angka, bandingkan sebagai string
-        a = a.toLowerCase();
-        b = b.toLowerCase();
-        return a.localeCompare(b);
-    }
-
-    function updateSortIcon(column, direction) {
-        // Hapus semua ikon sorting
-        var headers = document.querySelectorAll('#visitorTable th');
-        headers.forEach(function(header) {
-            header.classList.remove('asc', 'desc');
-        });
-        
-        // Tambahkan ikon yang sesuai ke kolom yang diurutkan
-        var sortedHeader = document.querySelector('#visitorTable th:nth-child(' + (column + 1) + ')');
-        sortedHeader.classList.add(direction);
-    }
-
-    @if(session('success'))
-        <div>
-            {{session('success')}}
-        </div>
-    @endif
-
-    function openNav() {
-        document.getElementById("mySidenav").style.width = "250px";
-        document.getElementById("overlay").style.display = "block";
-    }
-
-    function closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
-        document.getElementById("overlay").style.display = "none";
-    }
-
-    function openFilterPopup() {
-        document.getElementById("filterPopupOverlay").style.display = "flex";
-    }
-
-    function closeFilterPopup() {
-        document.getElementById("filterPopupOverlay").style.display = "none";
-    }
-
-    function searchTable() {
-        const searchBar = document.getElementById('searchBar');
-        if (!searchBar) return; // Keluar dari fungsi jika elemen tidak ditemukan
-
-        const searchInput = searchBar.value.toLowerCase();
-        const rows = document.getElementById('visitorTableBody').getElementsByTagName('tr');
-        const noResultsMessage = document.getElementById('noResultsMessage');
-        let found = false;
-
-        for (let i = 0; i < rows.length; i++) {
-            const rowData = rows[i].textContent.toLowerCase();
-            if (rowData.includes(searchInput)) {
-                rows[i].style.display = '';
-                found = true;
-            } else {
-                rows[i].style.display = 'none';
-            }
-        }
-
-        if (noResultsMessage) {
-            noResultsMessage.style.display = found ? 'none' : 'block';
-        }
-    }
-
-    // Script untuk efek hover yang memengaruhi halaman utama
-    document.querySelectorAll('.navbar-menu a').forEach(link => {
-        link.addEventListener('mouseenter', () => {
-            document.getElementById('main').style.backgroundColor = '#e0f7fa';
-        });
-        link.addEventListener('mouseleave', () => {
-            document.getElementById('main').style.backgroundColor = '#f5f5f5';
-        });
-    });
-
-    // Tambahkan event listener untuk menutup pop-up ketika mengklik di luar area pop-up
-    document.getElementById("filterPopupOverlay").addEventListener("click", function(event) {
-        if (event.target === this) {
-            closeFilterPopup();
-        }
-    });
-
-    function applyTableAnimation() {
-        const tableContainer = document.querySelector('.table-container');
-        if (tableContainer) {
-            tableContainer.style.animationDelay = '0.1s';
-        }
-    }
-
-    // Panggil fungsi ini setelah konten dimuat
-    document.addEventListener('DOMContentLoaded', applyTableAnimation);
-
-    // Tambahkan event listener untuk searchBar
     document.addEventListener('DOMContentLoaded', function() {
-        const searchBar = document.getElementById('searchBar');
-        if (searchBar) {
-            searchBar.addEventListener('keyup', searchTable);
-        }
+        const ctx = document.getElementById('visitorChart').getContext('2d');
+        const timeRangeButtons = document.querySelectorAll('timeRangeSelector');
+
+        // Initialize chart with monthly data
+        updateChart('monthly');
+
+        // Event listener untuk selector
+        timeRangeSelector.addEventListener('change', function() {
+            const selectedRange = this.value;
+            updateChart(selectedRange);
+        });
+
+        
+
+        // Initialize calendar
+        initializeCalendar();
     });
+
+    // Initialize sidebar
+    const sidebar = document.getElementById('sidebar');
+    const sidebarHandle = document.querySelector('.sidebar-handle');
+
+    sidebarHandle.addEventListener('click', () => {
+        sidebar.classList.toggle('show');
+    });
+
+    function updateChart(timeRange) {
+        fetch(`/dashboard?time_range=${timeRange}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const chartData = prepareChartData(data, timeRange);
+            if (visitorChart instanceof Chart) {
+                visitorChart.destroy();
+            }
+            visitorChart = createChart(chartData, timeRange);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    function prepareChartData(data, timeRange) {
+        if (!data || typeof data !== 'object') {
+            console.error('Invalid data received:', data);
+            return { labels: [], values: [] };
+        }
+
+        const labels = Object.keys(data);
+        const values = Object.values(data);
+
+        switch(timeRange) {
+            case 'monthly':
+                return {
+                    labels: labels.map(month => {
+                        const [year, monthNum] = month.split('-');
+                        const date = new Date(year, parseInt(monthNum) - 1);
+                        return date.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+                    }),
+                    values: values
+                };
+            case 'yearly':
+                return {
+                    labels: labels.map(year => `Tahun ${year}`),
+                    values: values
+                };
+            default:
+                return { labels, values };
+        }
+    }
+
+    function createChart(data, timeRange) {
+        const ctx = document.getElementById('visitorChart').getContext('2d');
+        if (!data || !data.labels || !data.values) {
+            console.error('Invalid chart data:', data);
+            return null;
+        }
+
+        return new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Jumlah Pengunjung',
+                    data: data.values,
+                    backgroundColor: 'rgb(0, 255, 156)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            callback: function(value) { 
+                                return Math.floor(value); 
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: `Pengunjung ${
+                            timeRange === 'monthly' ? 'Bulanan' : 
+                            'Tahunan'
+                        }`,
+                        padding: {
+                            bottom: 20
+                        },
+                        font: {
+                            size: 24,
+                            family: 'Poppins',
+                        },
+                    }
+                }
+            }
+        });
+    }
+
+
+    // Inisialisasi kalender
+    function initializeCalendar() {
+        const daysTag = document.querySelector(".days"),
+        currentDate = document.querySelector(".current-date"),
+        prevNextIcon = document.querySelectorAll(".icons-report span");
+
+        if (!daysTag || !currentDate || prevNextIcon.length === 0) {
+            console.log("Elemen kalender belum dimuat, menunggu...");
+            setTimeout(initializeCalendar, 100); // Coba lagi setelah 100ms
+            return;
+        }
+
+        let date = new Date(),
+        currYear = date.getFullYear(),
+        currMonth = date.getMonth();
+
+        const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
+                        "Agustus", "September", "Oktober", "November", "Desember"];
+
+        const renderCalendar = () => {
+            let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(),
+            lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(),
+            lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(),
+            lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate();
+            let liTag = "";
+
+            for (let i = firstDayofMonth; i > 0; i--) {
+                liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
+            }
+
+            for (let i = 1; i <= lastDateofMonth; i++) {
+                let isToday = i === date.getDate() && currMonth === new Date().getMonth() 
+                            && currYear === new Date().getFullYear() ? "active" : "";
+                liTag += `<li class="${isToday}">${i}</li>`;
+            }
+
+            for (let i = lastDayofMonth; i < 6; i++) {
+                liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`
+            }
+            currentDate.innerText = `${months[currMonth]} ${currYear}`;
+            daysTag.innerHTML = liTag;
+        }
+        renderCalendar();
+
+        prevNextIcon.forEach(icon => {
+            icon.addEventListener("click", () => {
+                currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
+
+                if(currMonth < 0 || currMonth > 11) {
+                    date = new Date(currYear, currMonth, new Date().getDate());
+                    currYear = date.getFullYear();
+                    currMonth = date.getMonth();
+                } else {
+                    date = new Date();
+                }
+                renderCalendar();
+            });
+        });
+    }
 </script>
 @endsection

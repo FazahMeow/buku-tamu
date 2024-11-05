@@ -16,19 +16,18 @@ Route::get('/', function () {
 
 Route::get('/login', function () {
     return view('auth.login');
-})->name('login');//->middleware('report');
+})->name('login');//->middleware('dashboard');
 
 Route::post('/login', [AuthController::class, 'login']);
-    //->middleware('report');
+    //->middleware('dashboard');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/dashboard', [VisitorController::class, 'index'])->name('dashboard');
-
-Route::post('/visitor', [VisitorController::class, 'store'])
-     ->name('visitor.store');
-
 Route::middleware(['auth'])->group(function () {
-    Route::get('/report/dashboard', [VisitorController::class, 'report'])->name('report');
-    Route::get('/report', [VisitorController::class, 'report'])->name('report');
+    Route::get('/dashboard', [VisitorController::class, 'dashboard'])->name('dashboard');
+    
+    // Tambahkan route untuk halaman pengunjung
+    Route::get('/pengunjung', [VisitorController::class, 'index'])->name('pengunjung');
+    
+    Route::post('/pengunjung', [VisitorController::class, 'store'])->name('pengunjung.store');
 });

@@ -6,6 +6,7 @@ use App\Models\Visitor;
 use App\Models\FormData;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class VisitorController extends Controller
 {
@@ -14,32 +15,66 @@ class VisitorController extends Controller
         // Mengambil semua data visitor
         $visitors = FormData::all();
 
-        // Mengirim data visitors ke view dashboard
-        return view('login-page.dashboard', compact('visitors'));
+        // Mengirim data pengunjung ke view dashboard
+        return view('login-page.pengunjung', compact('visitors'));
     }
 
-    public function report()
+    public function dashboard(Request $request)
     {
-        // Ambil data pengunjung hari ini
-        $todayVisitors = Visitor::whereDate('created_at', Carbon::today())->count();
+        $timeRange = $request->input('time_range', 'monthly');
+        $visitors = $this->getVisitors($timeRange);
 
-        // Ambil total pengunjung per bulan
-        $monthlyVisitors = Visitor::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-            ->groupBy('month')
-            ->pluck('count', 'month')
-            ->toArray();
-
-        // Lengkapi data pengunjung per bulan (0 jika tidak ada data)
-        $totalVisitorsPerMonth = [];
-        for ($i = 1; $i <= 12; $i++) {
-            $totalVisitorsPerMonth[$i] = $monthlyVisitors[$i] ?? 0;
+        if ($request->ajax()) {
+            return response()->json($visitors);
         }
 
-        // Ambil nama, email, dan waktu masuk untuk tabel
-        $visitorTableData = Visitor::select('name', 'email', 'created_at')->get();
+        $visitorTableData = FormData::select('nama', 'email', 'dibuat_pada')
+            ->whereMonth('dibuat_pada', Carbon::now()->month)
+            ->whereYear('dibuat_pada', Carbon::now()->year)
+            ->orderBy('dibuat_pada', 'desc')
+            ->get();
 
-        // Mengirim data ke view report
-        return view('login-page.report', compact('totalVisitorsPerMonth', 'todayVisitors', 'visitorTableData'));
+        // Hitung total pengunjung per bulan
+        $totalVisitorsPerMonth = $this->getMonthlyVisitors();
+
+        return view('login-page.dashboard', compact('visitors', 'visitorTableData', 'timeRange', 'totalVisitorsPerMonth'));
+    }
+
+    private function getVisitors($timeRange)
+    {
+        switch ($timeRange) {
+            case 'yearly':
+                return $this->getYearlyVisitors();
+            case 'monthly':
+            default:
+                return $this->getMonthlyVisitors();
+        }
+    }
+
+    private function getMonthlyVisitors()
+    {
+        return FormData::select(DB::raw('YEAR(dibuat_pada) as year'), DB::raw('MONTH(dibuat_pada) as month'), DB::raw('COUNT(*) as count'))
+            ->whereBetween('dibuat_pada', [Carbon::now()->subMonths(12), Carbon::now()])
+            ->groupBy('year', 'month')
+            ->orderBy('year')
+            ->orderBy('month')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                $date = Carbon::createFromDate($item->year, $item->month, 1)->format('Y-m');
+                return [$date => $item->count];
+            })
+            ->toArray();
+    }
+
+    private function getYearlyVisitors()
+    {
+        return FormData::select(DB::raw('YEAR(dibuat_pada) as year'), DB::raw('COUNT(*) as count'))
+            ->whereBetween('dibuat_pada', [Carbon::now()->subYears(5), Carbon::now()])
+            ->groupBy('year')
+            ->orderBy('year')
+            ->get()
+            ->pluck('count', 'year')
+            ->toArray();
     }
 
     public function store(Request $request)

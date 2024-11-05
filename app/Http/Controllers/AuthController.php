@@ -16,7 +16,7 @@ class AuthController extends Controller
         $credentials = $request->only('username', 'password');
 
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('report');
+            return redirect()->intended('dashboard');
         }
 
         return back()->withErrors([
